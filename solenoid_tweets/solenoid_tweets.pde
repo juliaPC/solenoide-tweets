@@ -52,7 +52,9 @@ void setup() {
     TweetsProducer tweets_producer = TweetsFactory.get_tweets_producer(is_production, config, this);
     tweets_producer.add_listener(listener);
 
-    this.solenoid = new Solenoid(this, is_production);
+    this.solenoid = new Solenoid(this,
+                                 config.get("port"),
+                                 config.get("hit") == "1");
 
     tweets_producer.start(this.tags);
 }
