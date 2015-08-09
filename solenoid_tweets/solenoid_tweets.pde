@@ -13,32 +13,18 @@ import twitter4j.api.*;
 
 // java.util package
 import java.util.*;
-
 import processing.serial.*; // serial communication library
-Serial arduinoPort; // serial port object
 
-// Put the OAuth data into the ConfigurationBuilder
-void configure_cb(ConfigurationBuilder cb) {
-    cb.setOAuthConsumerKey(TweeterAccountData.OAuthConsumerKey);
-    cb.setOAuthConsumerSecret(TweeterAccountData.OAuthConsumerSecret);
-    cb.setOAuthAccessToken(TweeterAccountData.OAuthAccessToken);
-    cb.setOAuthAccessTokenSecret(TweeterAccountData.OAuthAccessTokenSecret);
-}
+Solenoid solenoid = null;
+
+boolean is_production = true; // Set to true for production
 
 void setup() {
     size(800,600);
     fill(255);
-                
-    // serial communication with arduino
-    println(Serial.list());
-    String portName = Serial.list()[5];
-    arduinoPort = new Serial(this, portName, 9600);
-  
-    // authenticate our application with the API application keys zith ConfigurationBuilder object
-    ConfigurationBuilder cb = new ConfigurationBuilder();
-    configure_cb(cb);  
-    
-    StatusListener listener = new StatusListener(){
+
+    // Tweets listener
+    StatusListener listener = new StatusListener() {
         public void onStatus(Status status) {
             System.out.println(status.getUser().getName() + " : " + status.getText());
             
@@ -47,7 +33,7 @@ void setup() {
             text(status.getUser().getName() + " : " + status.getText(), width/2, height/2, 300, 200);
           
             // notify new tweet to Arduino via serial
-            arduinoPort.write(255);
+            //arduinoPort.write(255);
         }
         public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {}
         public void onTrackLimitationNotice(int numberOfLimitedStatuses) {}
@@ -57,7 +43,24 @@ void setup() {
             ex.printStackTrace();
         }
     };
+
+    TweetsProducer tweets_producer = TweetsFactory.get_tweets_producer(is_production, this);
+    tweets_producer.add_listener(listener);
+
+    this.solenoid = new Solenoid(this);
+  
     
+    /*            
+    // serial communication with arduino
+    println(Serial.list());
+    String portName = Serial.list()[5];
+    arduinoPort = new Serial(this, portName, 9600);
+  
+    // authenticate our application with the API application keys with
+    // ConfigurationBuilder object
+    ConfigurationBuilder cb = new ConfigurationBuilder();
+    configure_cb(cb);  
+       
     // obtener objeto twitterstream
     TwitterStream twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
     // añadir listener
@@ -67,9 +70,8 @@ void setup() {
     String tweetsDiana[] = {"#greece", "#oxi", "#grexit" };
     query.track(tweetsDiana);
     
-    twitterStream.filter(query);    
+    twitterStream.filter(query);*/
 }
 
 void draw() {
 }
-
