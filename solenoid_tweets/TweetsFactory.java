@@ -8,16 +8,20 @@
 // Twitter4J library
 import twitter4j.conf.*;
 import processing.core.*;
+import twitter4j.*;
 
 public class TweetsFactory {
-    static TweetsProducer get_tweets_producer(boolean is_production, Config config, PApplet p_applet) {
+    static TweetsProducer get_tweets_producer(boolean is_production,
+                                              StatusListener listener,
+                                              Config config,
+                                              PApplet p_applet) {
         if (is_production) {
             System.out.println("TweetsProducer creating stream producer");
-            return new TweetsProducerStream(config, p_applet);
+            return new TweetsProducerStream(config, listener, p_applet);
         }
         else {
             System.out.println("TweetsProducer creating simulation producer");
-            return new TweetsProducerSimul(config, p_applet);
+            return new TweetsProducerSimul(config, listener, p_applet);
         }
     }
 }

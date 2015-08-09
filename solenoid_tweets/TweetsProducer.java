@@ -7,14 +7,21 @@
 
 // Twitter4J library
 import twitter4j.*;
+import processing.core.*;
 
 public abstract class TweetsProducer {
-    protected StatusListener listener;
- 
-    public void add_listener(StatusListener listener) {
+    protected StatusListener listener = null;
+    protected Config config;
+    protected PApplet p_applet;
+    
+    public TweetsProducer(Config config,
+                          StatusListener listener,
+                          PApplet p_applet) {
+        this.config = config;
+        this.p_applet = p_applet;
         this.listener = listener;
-    }
-
+    }    
+ 
     public abstract void start(String[] tags);
     public abstract void stop();
 

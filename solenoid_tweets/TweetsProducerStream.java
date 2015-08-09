@@ -26,8 +26,10 @@ public class TweetsProducerStream extends TweetsProducer {
         cb.setOAuthAccessTokenSecret(this.config.get("OAuthAccessTokenSecret"));
     }
 
-    public TweetsProducerStream(Config config, PApplet p_applet) {
-       this.config = config;
+    public TweetsProducerStream(Config config,
+                                StatusListener listener,
+                                PApplet p_applet) {
+       super(config, listener, p_applet);
 
        // authenticate our application with the API application keys with
        // ConfigurationBuilder object

@@ -20,13 +20,14 @@ Solenoid solenoid = null;
 // Configuration
 String[] tags = {"#greece", "#oxi", "#grexit"};
 String config_filename = "solenoid_tweets/resources/config.properties";
-boolean is_production = true; // True: production. False: simulations
+boolean is_production; // true: production. false: simulations
 
 void setup() {
     size(800,600);
     fill(255);
 
     Config config = new Config(config_filename);
+    this.is_production = (config.get("production") == "1");
 
     // Tweets listener
     StatusListener listener = new StatusListener() {
@@ -49,8 +50,8 @@ void setup() {
         }
     };
 
-    TweetsProducer tweets_producer = TweetsFactory.get_tweets_producer(is_production, config, this);
-    tweets_producer.add_listener(listener);
+    TweetsProducer tweets_producer =
+      TweetsFactory.get_tweets_producer(is_production, listener, config, this);
 
     this.solenoid = new Solenoid(this,
                                  config.get("port"),
