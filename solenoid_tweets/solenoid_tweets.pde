@@ -17,12 +17,16 @@ import processing.serial.*; // serial communication library
 
 Solenoid solenoid = null;
 
+// Configuration
 String[] tags = {"#greece", "#oxi", "#grexit"};
-boolean is_production = true; // Set to true for production. False for simuls
+String config_filename = "solenoid_tweets/resources/config.properties";
+boolean is_production = true; // True: production. False: simulations
 
 void setup() {
     size(800,600);
     fill(255);
+
+    Config config = new Config(config_filename);
 
     // Tweets listener
     StatusListener listener = new StatusListener() {
@@ -45,37 +49,12 @@ void setup() {
         }
     };
 
-    TweetsProducer tweets_producer = TweetsFactory.get_tweets_producer(is_production, this);
+    TweetsProducer tweets_producer = TweetsFactory.get_tweets_producer(is_production, config, this);
     tweets_producer.add_listener(listener);
 
     this.solenoid = new Solenoid(this, is_production);
 
     tweets_producer.start(this.tags);
-
-
-  
-    
-    /*            
-    // serial communication with arduino
-    println(Serial.list());
-    String portName = Serial.list()[5];
-    arduinoPort = new Serial(this, portName, 9600);
-  
-    // authenticate our application with the API application keys with
-    // ConfigurationBuilder object
-    ConfigurationBuilder cb = new ConfigurationBuilder();
-    configure_cb(cb);  
-       
-    // obtener objeto twitterstream
-    TwitterStream twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
-    // añadir listener
-    twitterStream.addListener(listener);
-    
-    FilterQuery query = new FilterQuery();
-    String tweetsDiana[] = {"#greece", "#oxi", "#grexit" };
-    query.track(tweetsDiana);
-    
-    twitterStream.filter(query);*/
 }
 
 void draw() {

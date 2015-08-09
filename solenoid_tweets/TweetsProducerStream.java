@@ -14,18 +14,21 @@ import processing.core.*;
 
 public class TweetsProducerStream extends TweetsProducer {
 
-    private ConfigurationBuilder cb = null;
-    private TwitterStream twitterStream = null;
+    private ConfigurationBuilder cb;
+    private TwitterStream twitterStream;
+    private Config config;
 
     // Put the OAuth data into the ConfigurationBuilder
-    private static void configure_cb(ConfigurationBuilder cb) {
-        cb.setOAuthConsumerKey(TweeterAccountData.OAuthConsumerKey);
-        cb.setOAuthConsumerSecret(TweeterAccountData.OAuthConsumerSecret);
-        cb.setOAuthAccessToken(TweeterAccountData.OAuthAccessToken);
-        cb.setOAuthAccessTokenSecret(TweeterAccountData.OAuthAccessTokenSecret);
+    private void configure_cb(ConfigurationBuilder cb) {
+        cb.setOAuthConsumerKey(this.config.get("OAuthConsumerKey"));
+        cb.setOAuthConsumerSecret(this.config.get("OAuthConsumerSecret"));
+        cb.setOAuthAccessToken(this.config.get("OAuthAccessToken"));
+        cb.setOAuthAccessTokenSecret(this.config.get("OAuthAccessTokenSecret"));
     }
 
-    public TweetsProducerStream(PApplet p_applet) {
+    public TweetsProducerStream(Config config, PApplet p_applet) {
+       this.config = config;
+
        // authenticate our application with the API application keys with
        // ConfigurationBuilder object
        this.cb = new ConfigurationBuilder();

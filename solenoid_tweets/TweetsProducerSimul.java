@@ -12,8 +12,10 @@ import processing.core.*;
 public class TweetsProducerSimul extends TweetsProducer {
 
     private boolean running;
+    private Config config;
 
-    public TweetsProducerSimul(PApplet p_applet) {
+    public TweetsProducerSimul(Config config, PApplet p_applet) {
+        this.config = config;
         this.running = true;
     }
 
