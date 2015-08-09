@@ -22,11 +22,14 @@ public class TweetsProducerSimul extends TweetsProducer implements Runnable {
 		while (this.running) {
 			try {
 		        System.out.println("Simul thread running... (" + counter + ")");
+		        
+		        this.listener.onStatus(null);
+		        
 		        counter++;
-		        Thread.sleep(5000); // ms
+		        Thread.sleep(2000); // ms
 			}
 			catch (InterruptedException e) {
-				System.out.println("InterruptedException: " + e);
+				System.out.println("Simul InterruptedException: " + e);
 			}
 	    }
 	}
@@ -35,17 +38,24 @@ public class TweetsProducerSimul extends TweetsProducer implements Runnable {
                                StatusListener listener,
                                PApplet p_applet) {
         super(config, listener, p_applet);
-        this.running = true;
+        this.th = new Thread(this, "tweets_simul_thread");
+        this.running = false;
     }
 
     public void start(String[] tags) {
-        this.running = true;
         this.th = new Thread(this, "tweets_simul_thread");
+        this.running = true;
         this.th.start();
     }
 
     public void stop() {
         this.running = false;
-        this.th.stop();
+
+        try {
+            this.th.join();
+        }
+        catch (InterruptedException e) {
+            System.out.println("Simul start InterruptedException: " + e);
+        }
     }
 }

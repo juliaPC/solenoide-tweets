@@ -16,11 +16,21 @@ import java.util.*;
 import processing.serial.*; // serial communication library
 
 Solenoid solenoid = null;
+int simul_counter = 0;
 
 // Configuration
 String[] tags = {"#greece", "#oxi", "#grexit"};
 String config_filename = "solenoid_tweets/resources/config.properties";
 boolean is_production; // true: production. false: simulations
+
+void sleep(int ms) {
+    try {
+        Thread.sleep(ms); // ms
+    }
+    catch (InterruptedException e) {
+        System.out.println("sleep InterruptedException: " + e);
+    }
+}
 
 void setup() {
     size(800,600);
@@ -32,11 +42,27 @@ void setup() {
     // Tweets listener
     StatusListener listener = new StatusListener() {
         public void onStatus(Status status) {
-            System.out.println(status.getUser().getName() + " : " + status.getText());
+			
+			String username;
+			String text;
+
+			if (status == null) {
+			    username = "username simul";
+			    text = "text simul (" + simul_counter + ")";
+			    simul_counter++;
+			}
+			else {
+			    username = status.getUser().getName();
+			    text = status.getText();
+			}
+			
+            System.out.println(username + " : " + text);
             
             background(0);
             
-            text(status.getUser().getName() + " : " + status.getText(), width/2, height/2, 300, 200);
+            text(username + " : " + text,
+                 width/2, height/2,
+                 300, 200);
           
             // notify new tweet to Arduino via serial
             solenoid.hit();
@@ -56,8 +82,14 @@ void setup() {
     this.solenoid = new Solenoid(this,
                                  config.get("port"),
                                  config.get("hit") == "1");
-
-    tweets_producer.start(this.tags);
+    
+    Control control = new Control(tweets_producer, this.tags);
+    
+    // Main loop
+    //while (true) {
+	//	System.out.println("Main loop");
+	//	this.sleep(1000);
+	//}
 }
 
 void draw() {
