@@ -14,7 +14,8 @@ import processing.core.*;
 
 public class TweetsProducerStream extends TweetsProducer {
 
-    private ConfigurationBuilder cb;
+    private ConfigurationBuilder cb = null;
+    private TwitterStream twitterStream = null;
 
     // Put the OAuth data into the ConfigurationBuilder
     private static void configure_cb(ConfigurationBuilder cb) {
@@ -31,14 +32,21 @@ public class TweetsProducerStream extends TweetsProducer {
        this.configure_cb(this.cb);  
        
        // obtener objeto twitterstream
-       TwitterStream twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
+       this.twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
        // añadir listener
-       twitterStream.addListener(this.listener);
-    
+       twitterStream.addListener(this.listener);    
+    }
+
+    public void start(String[] tags) {
        FilterQuery query = new FilterQuery();
-       String tweetsDiana[] = {"#greece", "#oxi", "#grexit" };
-       query.track(tweetsDiana);
+       String tweetsTarget[] = tags;
+       query.track(tweetsTarget);
     
-       twitterStream.filter(query);
+       this.twitterStream.filter(query);
+    }
+
+    public void stop() {
+        this.twitterStream.cleanUp();
+        this.twitterStream.shutdown();
     }
 }

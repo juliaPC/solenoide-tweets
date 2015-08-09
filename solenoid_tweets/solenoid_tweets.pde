@@ -17,7 +17,8 @@ import processing.serial.*; // serial communication library
 
 Solenoid solenoid = null;
 
-boolean is_production = true; // Set to true for production
+String[] tags = {"#greece", "#oxi", "#grexit"};
+boolean is_production = true; // Set to true for production. False for simuls
 
 void setup() {
     size(800,600);
@@ -33,7 +34,7 @@ void setup() {
             text(status.getUser().getName() + " : " + status.getText(), width/2, height/2, 300, 200);
           
             // notify new tweet to Arduino via serial
-            //arduinoPort.write(255);
+            solenoid.hit();
         }
         public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {}
         public void onTrackLimitationNotice(int numberOfLimitedStatuses) {}
@@ -47,7 +48,11 @@ void setup() {
     TweetsProducer tweets_producer = TweetsFactory.get_tweets_producer(is_production, this);
     tweets_producer.add_listener(listener);
 
-    this.solenoid = new Solenoid(this);
+    this.solenoid = new Solenoid(this, is_production);
+
+    tweets_producer.start(this.tags);
+
+
   
     
     /*            
@@ -75,3 +80,4 @@ void setup() {
 
 void draw() {
 }
+

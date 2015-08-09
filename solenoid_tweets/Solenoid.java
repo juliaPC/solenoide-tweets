@@ -10,7 +10,8 @@ import processing.core.*;
 import processing.serial.*; // serial communication library
 
 public class Solenoid {
-    private Serial arduinoPort = null; // serial port object
+    private Serial arduinoPort; // serial port object
+    private boolean do_hit;
 
     private void println(String[] strs) {
         for (String s: strs)
@@ -21,7 +22,9 @@ public class Solenoid {
         System.out.println(str);
     }
 
-    public Solenoid(PApplet p_applet) {
+    public Solenoid(PApplet p_applet, boolean do_hit) {
+        this.do_hit = do_hit;
+
         // serial communication with arduino
         println(Serial.list());
         String portName = Serial.list()[5];
@@ -29,7 +32,12 @@ public class Solenoid {
     }
 
     public void hit() {
-        this.arduinoPort.write(255);
+        if (this.do_hit) {
+            System.out.println("Solenoid hit!");
+            this.arduinoPort.write(255);
+        }
+        else {
+            System.out.println("Solenoid simulated hit!");
+        }
     }
-
 }

@@ -11,7 +11,17 @@ import processing.core.*;
 
 public class TweetsProducerSimul extends TweetsProducer {
 
+    private boolean running;
+
     public TweetsProducerSimul(PApplet p_applet) {
+        this.running = true;
     }
 
+    public void start(String[] tags) {
+        this.running = true;
+    }
+
+    public void stop() {
+        this.running = false;
+    }
 }

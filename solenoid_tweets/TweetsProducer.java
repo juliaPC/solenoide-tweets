@@ -8,10 +8,15 @@
 // Twitter4J library
 import twitter4j.*;
 
-public class TweetsProducer {
+public abstract class TweetsProducer {
     protected StatusListener listener;
  
     public void add_listener(StatusListener listener) {
         this.listener = listener;
     }
+
+    public abstract void start(String[] tags);
+    public abstract void stop();
+
 }
+
