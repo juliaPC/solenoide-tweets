@@ -37,7 +37,7 @@ void setup() {
     fill(255);
 
     Config config = new Config(config_filename);
-    this.is_production = (config.get("production") == "1");
+    this.is_production = ("1".equals(config.get("production")));
 
     // Tweets listener
     StatusListener listener = new StatusListener() {

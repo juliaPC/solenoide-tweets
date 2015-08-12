@@ -16,7 +16,6 @@ public class TweetsProducerStream extends TweetsProducer {
 
     private ConfigurationBuilder cb;
     private TwitterStream twitterStream;
-    private Config config;
 
     // Put the OAuth data into the ConfigurationBuilder
     private void configure_cb(ConfigurationBuilder cb) {
