@@ -52,7 +52,7 @@ public class Control implements Runnable {
 
     public void start_producer() {
 		System.out.println("Control starting producer thread");
-        this.tweets_producer.start(this.tags);
+                this.tweets_producer.start(this.tags);
     }
 
     public void stop_producer() {
@@ -60,3 +60,27 @@ public class Control implements Runnable {
 		this.tweets_producer.stop();
     }
 }
+
+/*
+
+// check time with the clock on your computer
+  int s = second();  // Values from 0 - 59
+  int m = minute();  // Values from 0 - 59
+  int h = hour();    // Values from 0 - 23
+
+// time schedule
+  if ((h > 9) && (h < 22)) {
+    public void start_producer() {
+                System.out.println("Control starting producer thread");
+                this.tweets_producer.start(this.tags);
+    }  
+  }
+  
+  else { 
+    public void stop_producer() {
+               System.out.println("Control stopping producer thread");
+               this.tweets_producer.stop();
+    }
+  }
+  
+*/

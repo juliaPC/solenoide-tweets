@@ -19,7 +19,7 @@ Solenoid solenoid = null;
 int simul_counter = 0;
 
 // Configuration
-String[] tags = {"#greece", "#oxi", "#grexit"};
+String[] tags = {"#greece", "#oxi", "#grexit", "#hello"};
 String config_filename = "solenoid_tweets/resources/config.properties";
 boolean is_production; // true: production. false: simulations
 
