@@ -81,7 +81,7 @@ void setup() {
 
     this.solenoid = new Solenoid(this,
                                  config.get("port"),
-                                 config.get("hit") == "1");
+                                 "1".equals(config.get("hit")));
     
     Control control = new Control(tweets_producer, this.tags);
     
