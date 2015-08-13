@@ -9,6 +9,7 @@
 import twitter4j.*;
 import twitter4j.conf.*;
 import processing.core.*;
+import java.util.*;
 
 
 public class Control implements Runnable {
@@ -17,48 +18,55 @@ public class Control implements Runnable {
     private String[] tags;
 
     public void run() {
-		int counter = 0;
-		boolean status = true;
-	
-		while (true) { 
-			try {
-		        System.out.println("Control thread running (" + counter + ")...");
-		        
-		        if (counter % 10 == 0) {
-					if (status)
-					    this.start_producer();
-					else
-					    this.stop_producer();					
-					status = !status;
-				}
-                counter++;
-				
-		        
-		        
-		        Thread.sleep(2000); // ms
-			}
-			catch (InterruptedException e) {
-				System.out.println("Control InterruptedException: " + e);
-			}
-	    }
+        int counter = 0;
+        boolean status = true;
+
+        Calendar start_cal = Calendar.getInstance();
+        Calendar end_cal = Calendar.getInstance();
+
+        start_cal.set(Calendar.HOUR_OF_DAY, 8);
+        start_cal.set(Calendar.MINUTE, 45);
+
+        end_cal.set(Calendar.HOUR_OF_DAY, 22);
+        end_cal.set(Calendar.MINUTE, 15);
+
+        while (true) { 
+            try {
+                System.out.println("Control thread running (" + counter + ")...");
+
+                // Get current time
+                Calendar current_cal = Calendar.getInstance();
+
+                // Check if within working time and start/stop the producer
+                if (current_cal.after(start_cal) && current_cal.before(end_cal))
+                    this.start_producer();
+                else
+                    this.stop_producer();
+
+                Thread.sleep(2000); // ms
+            }
+            catch (InterruptedException e) {
+                System.out.println("Control InterruptedException: " + e);
+            }
+        }
     }
 
     public Control(TweetsProducer tweets_producer, String[] tags) {
-		this.tweets_producer = tweets_producer;
-		this.tags = tags;
-		
+        this.tweets_producer = tweets_producer;
+        this.tags = tags;
+        
         this.th = new Thread(this, "control_thread");
         this.th.start();
     }
 
     public void start_producer() {
-		System.out.println("Control starting producer thread");
+        System.out.println("Control starting producer thread");
                 this.tweets_producer.start(this.tags);
     }
 
     public void stop_producer() {
-		System.out.println("Control stopping producer thread");
-		this.tweets_producer.stop();
+        System.out.println("Control stopping producer thread");
+        this.tweets_producer.stop();
     }
 
 }
