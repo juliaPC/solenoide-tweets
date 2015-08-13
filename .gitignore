@@ -4,3 +4,5 @@ config.properties
 code/
 output_dir/
 /solenoid_tweets_java/nbproject/private/
+.DS_Store
+
