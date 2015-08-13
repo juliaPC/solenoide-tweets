@@ -15,20 +15,15 @@ import java.util.*;
 public class Control implements Runnable {
     private Thread th;
     private TweetsProducer tweets_producer;
+
+    // Start and end working times
+    private Calendar start_cal, end_cal;
+
     private String[] tags;
 
     public void run() {
         int counter = 0;
         boolean status = true;
-
-        Calendar start_cal = Calendar.getInstance();
-        Calendar end_cal = Calendar.getInstance();
-
-        start_cal.set(Calendar.HOUR_OF_DAY, 8);
-        start_cal.set(Calendar.MINUTE, 45);
-
-        end_cal.set(Calendar.HOUR_OF_DAY, 22);
-        end_cal.set(Calendar.MINUTE, 15);
 
         while (true) { 
             try {
@@ -38,7 +33,7 @@ public class Control implements Runnable {
                 Calendar current_cal = Calendar.getInstance();
 
                 // Check if within working time and start/stop the producer
-                if (current_cal.after(start_cal) && current_cal.before(end_cal))
+                if (current_cal.after(this.start_cal) && current_cal.before(this.end_cal))
                     this.start_producer();
                 else
                     this.stop_producer();
@@ -51,9 +46,18 @@ public class Control implements Runnable {
         }
     }
 
-    public Control(TweetsProducer tweets_producer, String[] tags) {
+    public Control(TweetsProducer tweets_producer, String[] tags,
+                   Calendar start_cal, Calendar end_cal) {
         this.tweets_producer = tweets_producer;
         this.tags = tags;
+        this.start_cal = start_cal;
+        this.end_cal = end_cal;
+
+        //start_cal.set(Calendar.HOUR_OF_DAY, 8);
+        //start_cal.set(Calendar.MINUTE, 45);
+
+        //end_cal.set(Calendar.HOUR_OF_DAY, 22);
+        //end_cal.set(Calendar.MINUTE, 15);
         
         this.th = new Thread(this, "control_thread");
         this.th.start();

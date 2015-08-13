@@ -42,20 +42,20 @@ void setup() {
     // Tweets listener
     StatusListener listener = new StatusListener() {
         public void onStatus(Status status) {
-			
-			String username;
-			String text;
+            
+            String username;
+            String text;
 
-			if (status == null) {
-			    username = "username simul";
-			    text = "text simul (" + simul_counter + ")";
-			    simul_counter++;
-			}
-			else {
-			    username = status.getUser().getName();
-			    text = status.getText();
-			}
-			
+            if (status == null) {
+                username = "username simul";
+                text = "text simul (" + simul_counter + ")";
+                simul_counter++;
+            }
+            else {
+                username = status.getUser().getName();
+                text = status.getText();
+            }
+            
             System.out.println(username + " : " + text);
             
             background(0);
@@ -83,13 +83,17 @@ void setup() {
                                  config.get("port"),
                                  "1".equals(config.get("hit")));
     
-    Control control = new Control(tweets_producer, this.tags);
-    
-    // Main loop
-    //while (true) {
-	//	System.out.println("Main loop");
-	//	this.sleep(1000);
-	//}
+    // Configure start and end working times
+    Calendar start_cal = Calendar.getInstance();
+    start_cal.set(Calendar.HOUR_OF_DAY, 8);
+    start_cal.set(Calendar.MINUTE, 45);
+
+    Calendar end_cal = Calendar.getInstance();
+    end_cal.set(Calendar.HOUR_OF_DAY, 22);
+    end_cal.set(Calendar.MINUTE, 15);
+
+    Control control = new Control(tweets_producer, this.tags,
+                      start_cal, end_cal);    
 }
 
 void draw() {
