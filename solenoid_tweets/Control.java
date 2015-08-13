@@ -10,6 +10,7 @@ import twitter4j.*;
 import twitter4j.conf.*;
 import processing.core.*;
 
+
 public class Control implements Runnable {
     private Thread th;
     private TweetsProducer tweets_producer;
@@ -18,8 +19,8 @@ public class Control implements Runnable {
     public void run() {
 		int counter = 0;
 		boolean status = true;
-		
-		while (true) {
+	
+		while (true) { 
 			try {
 		        System.out.println("Control thread running (" + counter + ")...");
 		        
@@ -59,6 +60,7 @@ public class Control implements Runnable {
 		System.out.println("Control stopping producer thread");
 		this.tweets_producer.stop();
     }
+
 }
 
 /*
@@ -69,7 +71,7 @@ public class Control implements Runnable {
   int h = hour();    // Values from 0 - 23
 
 // time schedule
-  if ((h > 9) && (h < 22)) {
+  while ((h > 9) && (h < 22)) {
     public void start_producer() {
                 System.out.println("Control starting producer thread");
                 this.tweets_producer.start(this.tags);
