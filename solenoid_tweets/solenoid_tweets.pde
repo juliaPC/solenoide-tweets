@@ -32,6 +32,23 @@ void sleep(int ms) {
     }
 }
 
+// Create a new Calender object with the current date and the
+// given 24h time string (for example, "13:45")
+Calendar create_calendar(String time_str) {
+    // Parse string
+    String[] hour_minute = time_str.split(":");
+    int hour = Integer.parseInt(hour_minute[0]);
+    int minute = Integer.parseInt(hour_minute[1]);
+
+    // Create calendar
+    Calendar cal = Calendar.getInstance();
+    cal.set(Calendar.HOUR_OF_DAY, hour);
+    cal.set(Calendar.MINUTE, minute);
+
+    return cal;
+}
+
+
 void setup() {
     size(800,600);
     fill(255);
@@ -84,13 +101,8 @@ void setup() {
                                  "1".equals(config.get("hit")));
     
     // Configure start and end working times
-    Calendar start_cal = Calendar.getInstance();
-    start_cal.set(Calendar.HOUR_OF_DAY, 8);
-    start_cal.set(Calendar.MINUTE, 45);
-
-    Calendar end_cal = Calendar.getInstance();
-    end_cal.set(Calendar.HOUR_OF_DAY, 22);
-    end_cal.set(Calendar.MINUTE, 15);
+    Calendar start_cal = create_calendar(config.get("start_time"));
+    Calendar end_cal = create_calendar(config.get("end_time"));
 
     Control control = new Control(tweets_producer, this.tags,
                       start_cal, end_cal);    

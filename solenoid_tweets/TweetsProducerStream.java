@@ -41,7 +41,7 @@ public class TweetsProducerStream extends TweetsProducer {
        twitterStream.addListener(this.listener);    
     }
 
-    public void start(String[] tags) {
+     public synchronized void start(String[] tags) {
        FilterQuery query = new FilterQuery();
        String tweetsTarget[] = tags;
        query.track(tweetsTarget);
@@ -49,7 +49,7 @@ public class TweetsProducerStream extends TweetsProducer {
        this.twitterStream.filter(query);
     }
 
-    public void stop() {
+    public synchronized void stop() {
         this.twitterStream.cleanUp();
         this.twitterStream.shutdown();
     }

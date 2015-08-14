@@ -15,6 +15,7 @@ import java.util.*;
 public class Control implements Runnable {
     private Thread th;
     private TweetsProducer tweets_producer;
+    private boolean producer_running;
 
     // Start and end working times
     private Calendar start_cal, end_cal;
@@ -22,21 +23,20 @@ public class Control implements Runnable {
     private String[] tags;
 
     public void run() {
-        int counter = 0;
-        boolean status = true;
-
         while (true) { 
             try {
-                System.out.println("Control thread running (" + counter + ")...");
+                System.out.println("Control thread running");
 
                 // Get current time
                 Calendar current_cal = Calendar.getInstance();
 
                 // Check if within working time and start/stop the producer
-                if (current_cal.after(this.start_cal) && current_cal.before(this.end_cal))
+                if (!this.producer_running && this.within(current_cal))
                     this.start_producer();
-                else
-                    this.stop_producer();
+                else {
+                    if (this.producer_running && !this.within(current_cal))
+                        this.stop_producer();
+                }
 
                 Thread.sleep(2000); // ms
             }
@@ -46,55 +46,48 @@ public class Control implements Runnable {
         }
     }
 
+    // Checks if the current time is within the configured working time
+    private boolean within(Calendar cal) {
+        int h1 = this.start_cal.get(Calendar.HOUR_OF_DAY);
+        int m1 = this.start_cal.get(Calendar.MINUTE);
+        int start = h1*60 + m1;
+
+        int h2 = this.end_cal.get(Calendar.HOUR_OF_DAY);
+        int m2 = this.end_cal.get(Calendar.MINUTE);
+        int end = h2*60 + m2;
+
+        Calendar current_cal = Calendar.getInstance();
+        int h = current_cal.get(Calendar.HOUR_OF_DAY);
+        int m = current_cal.get(Calendar.MINUTE);
+        int current = h*60 + m;
+
+        return current >= start && current <= end;
+    }
+
     public Control(TweetsProducer tweets_producer, String[] tags,
                    Calendar start_cal, Calendar end_cal) {
         this.tweets_producer = tweets_producer;
         this.tags = tags;
+        //
         this.start_cal = start_cal;
         this.end_cal = end_cal;
-
-        //start_cal.set(Calendar.HOUR_OF_DAY, 8);
-        //start_cal.set(Calendar.MINUTE, 45);
-
-        //end_cal.set(Calendar.HOUR_OF_DAY, 22);
-        //end_cal.set(Calendar.MINUTE, 15);
+        //
+        this.producer_running = false;
         
         this.th = new Thread(this, "control_thread");
         this.th.start();
     }
 
-    public void start_producer() {
+    public synchronized void start_producer() {
         System.out.println("Control starting producer thread");
-                this.tweets_producer.start(this.tags);
+        this.tweets_producer.start(this.tags);
+        this.producer_running = true;
     }
 
-    public void stop_producer() {
+    public synchronized void stop_producer() {
         System.out.println("Control stopping producer thread");
         this.tweets_producer.stop();
+        this.producer_running = false;
     }
-
 }
 
-/*
-
-// check time with the clock on your computer
-  int s = second();  // Values from 0 - 59
-  int m = minute();  // Values from 0 - 59
-  int h = hour();    // Values from 0 - 23
-
-// time schedule
-  while ((h > 9) && (h < 22)) {
-    public void start_producer() {
-                System.out.println("Control starting producer thread");
-                this.tweets_producer.start(this.tags);
-    }  
-  }
-  
-  else { 
-    public void stop_producer() {
-               System.out.println("Control stopping producer thread");
-               this.tweets_producer.stop();
-    }
-  }
-  
-*/

@@ -42,7 +42,7 @@ public class TweetsProducerSimul extends TweetsProducer implements Runnable {
         this.running = false;
     }
 
-    public void start(String[] tags) {
+    public synchronized void start(String[] tags) {
         this.stop();
 
         this.th = new Thread(this, "tweets_simul_thread");
@@ -50,7 +50,7 @@ public class TweetsProducerSimul extends TweetsProducer implements Runnable {
         this.th.start();
     }
 
-    public void stop() {
+    public synchronized void stop() {
         this.running = false;
         if (this.th == null)
             return;
