@@ -9,13 +9,15 @@
 import twitter4j.*;
 import twitter4j.conf.*;
 import processing.core.*;
+import java.util.Random;
 
 public class TweetsProducerSimul extends TweetsProducer implements Runnable {
 
     private Thread th = null;
 
     private boolean running;
-    private Config config;
+    private Random rand;
+    private int simul_max_random;
     
     public void run() {
         int counter = 0;
@@ -26,7 +28,9 @@ public class TweetsProducerSimul extends TweetsProducer implements Runnable {
                 this.listener.onStatus(null);
                 
                 counter++;
-                Thread.sleep(2000); // ms
+
+                int time = rand.nextInt(this.simul_max_random);
+                Thread.sleep(time); // ms
             }
             catch (InterruptedException e) {
                 System.out.println("Simul InterruptedException: " + e);
@@ -39,6 +43,10 @@ public class TweetsProducerSimul extends TweetsProducer implements Runnable {
                                PApplet p_applet) {
         super(config, listener, p_applet);
         this.th = new Thread(this, "tweets_simul_thread");
+        this.rand = new Random();
+                System.out.println("this.config: " + this.config);
+        this.simul_max_random = Integer.parseInt(
+                                  this.config.get("simul_max_random"));
         this.running = false;
     }
 
@@ -63,3 +71,4 @@ public class TweetsProducerSimul extends TweetsProducer implements Runnable {
         }
     }
 }
+
