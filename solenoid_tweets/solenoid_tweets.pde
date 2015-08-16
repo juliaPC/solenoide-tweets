@@ -23,14 +23,6 @@ String[] tags = {"#greece", "#oxi", "#grexit", "#hello"};
 String config_filename = "solenoid_tweets/resources/config.properties";
 boolean is_production; // true: production. false: simulations
 
-void sleep(int ms) {
-    try {
-        Thread.sleep(ms); // ms
-    }
-    catch (InterruptedException e) {
-        System.out.println("sleep InterruptedException: " + e);
-    }
-}
 
 // Create a new Calender object with the current date and the
 // given 24h time string (for example, "13:45")
@@ -101,8 +93,11 @@ void setup() {
                                  "1".equals(config.get("hit")));
     
     // Configure start and end working times
-    Calendar start_cal = create_calendar(config.get("start_time"));
-    Calendar end_cal = create_calendar(config.get("end_time"));
+    Calendar start_cal = this.create_calendar(config.get("start_time"));
+    Calendar end_cal = this.create_calendar(config.get("end_time"));
+
+    // Get the tags
+    //this.tags = get_tags();
 
     Control control = new Control(tweets_producer, this.tags,
                       start_cal, end_cal);    
