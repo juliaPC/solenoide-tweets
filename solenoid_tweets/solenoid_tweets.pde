@@ -19,7 +19,6 @@ Solenoid solenoid = null;
 int simul_counter = 0;
 
 // Configuration
-String[] tags = {"#greece", "#oxi", "#grexit", "#hello"};
 String config_filename = "solenoid_tweets/resources/config.properties";
 boolean is_production; // true: production. false: simulations
 
@@ -38,6 +37,18 @@ Calendar create_calendar(String time_str) {
     cal.set(Calendar.MINUTE, minute);
 
     return cal;
+}
+
+// Gets an array of Strings with the configured target tags
+String[] get_tags(Config config) {
+    String str = config.get("tags");
+
+    String[] tags = str.split(",");
+
+    for (int i = 0; i < tags.length; i++)
+        tags[i] = tags[i].trim();
+
+    return tags;
 }
 
 
@@ -97,9 +108,10 @@ void setup() {
     Calendar end_cal = this.create_calendar(config.get("end_time"));
 
     // Get the tags
-    //this.tags = get_tags();
+    String[] tags = this.get_tags(config);
 
-    Control control = new Control(tweets_producer, this.tags,
+    // Create and start control object
+    Control control = new Control(tweets_producer, tags,
                       start_cal, end_cal);    
 }
 

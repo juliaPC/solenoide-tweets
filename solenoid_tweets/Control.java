@@ -25,7 +25,7 @@ public class Control implements Runnable {
     public void run() {
         while (true) { 
             try {
-                System.out.println("Control thread running");
+                //System.out.println("Control thread running");
 
                 // Get current time
                 Calendar current_cal = Calendar.getInstance();
