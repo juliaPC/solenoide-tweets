@@ -51,9 +51,14 @@ String[] get_tags(Config config) {
     return tags;
 }
 
+void do_background() {
+    background(0);
+}
+
 
 void setup() {
     size(800,600);
+    do_background();
     fill(255);
 
     Config config = new Config(config_filename);
@@ -78,7 +83,7 @@ void setup() {
             
             System.out.println(username + " : " + text);
             
-            background(0);
+            do_background();
             
             text(username + " : " + text,
                  width/2, height/2,
