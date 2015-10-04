@@ -61,6 +61,8 @@ void setup() {
     do_background();
     fill(255);
 
+    System.out.println(new java.io.File("").getAbsolutePath());
+    
     Config config = new Config(config_filename);
     this.is_production = ("1".equals(config.get("production")));
 
