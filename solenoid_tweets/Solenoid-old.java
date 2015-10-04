@@ -27,7 +27,7 @@ public class Solenoid {
 
   public Solenoid(PApplet p_applet, String portName, boolean do_hit) {
     this.do_hit = do_hit;
-    
+
     // serial communication with arduino
     //println(Serial.list());
     //String portName = Serial.list()[5];
@@ -35,15 +35,13 @@ public class Solenoid {
     // GPIO config
     if (do_hit) {
       try {
-        RandomAccessFile f = new RandomAccessFile("/sys/class/gpio/unexport", "rw");
-        f.writeByte((byte)'1');
-        f.writeByte((byte)'8');
-        f.close();        
+        DataOutputStream os = new DataOutputStream(new FileOutputStream("/sys/class/gpio/export"));
+        os.writeByte(18); // pin number
+        os.close();
 
-        f = new RandomAccessFile("/sys/class/gpio/export", "rw");
-        f.writeByte((byte)'1');
-        f.writeByte((byte)'8');
-        f.close();        
+        os = new DataOutputStream(new FileOutputStream("/sys/class/gpio/gpio18/direction"));
+        os.writeChars("out"); // pin mode
+        os.close();
       }
       catch (FileNotFoundException e) {
         System.out.println("FileNotFoundException: " + e);
@@ -69,15 +67,11 @@ public class Solenoid {
       System.out.println("Solenoid hit!");
       // this.arduinoPort.write(255);
       try {
-        RandomAccessFile f = new RandomAccessFile("/sys/class/gpio/gpio18/value", "rw");
-        f.writeByte((byte)'1');
-        f.close();        
-
+        DataOutputStream os = new DataOutputStream(new FileOutputStream("/sys/class/gpio/gpio18/value"));
+        os.writeByte(1); // solenoid push 
         this.delay();
-
-        f = new RandomAccessFile("/sys/class/gpio/gpio18/value", "rw");
-        f.writeByte((byte)'0');
-        f.close();        
+        os.writeByte(0); // solenoid pull
+        os.close();
       }
       catch (FileNotFoundException e) {
         System.out.println("FileNotFoundException: " + e);
