@@ -91,7 +91,7 @@ void setup() {
                  width/2, height/2,
                  300, 200);
           
-            // notify new tweet to Arduino via serial
+            // notify new tweet
             solenoid.hit();
         }
         public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {}
@@ -107,7 +107,7 @@ void setup() {
       TweetsFactory.get_tweets_producer(is_production, listener, config, this);
 
     this.solenoid = new Solenoid(this,
-                                 config.get("port"),
+                                 config.get("pin"),
                                  "1".equals(config.get("hit")));
     
     // Configure start and end working times

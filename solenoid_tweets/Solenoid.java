@@ -15,34 +15,26 @@ import processing.serial.*; // serial communication library
 public class Solenoid {
   private Serial arduinoPort = null; // serial port object
   private boolean do_hit;
+  private RandomAccessFile pin_file;
 
-  private void println(String[] strs) {
-    for (String s : strs)
-      System.out.println(s);
-  }
-
-  private void println(String str) {
-    System.out.println(str);
-  }
-
-  public Solenoid(PApplet p_applet, String portName, boolean do_hit) {
+  public Solenoid(PApplet p_applet, String pin, boolean do_hit) {
     this.do_hit = do_hit;
     
-    // serial communication with arduino
-    //println(Serial.list());
-    //String portName = Serial.list()[5];
-
     // GPIO config
     if (do_hit) {
       try {
+		byte[] bytes_str = pin.getBytes();
+
         RandomAccessFile f = new RandomAccessFile("/sys/class/gpio/unexport", "rw");
-        f.writeByte((byte)'1');
-        f.writeByte((byte)'8');
+        f.writeByte(bytes_str[0]);
+        if (bytes_str.length > 1)
+          f.writeByte(bytes_str[1]);
         f.close();        
 
         f = new RandomAccessFile("/sys/class/gpio/export", "rw");
-        f.writeByte((byte)'1');
-        f.writeByte((byte)'8');
+		f.writeByte(bytes_str[0]);
+        if (bytes_str.length > 1)
+          f.writeByte(bytes_str[1]);
         f.close();        
       }
       catch (FileNotFoundException e) {
@@ -51,7 +43,6 @@ public class Solenoid {
       catch (IOException e) {
         System.out.println("IOException: " + e);
       }              
-      // this.arduinoPort = new Serial(p_applet, portName, 9600);
     }
   }
 
@@ -67,7 +58,7 @@ public class Solenoid {
   public void hit() {
     if (this.do_hit) {
       System.out.println("Solenoid hit!");
-      // this.arduinoPort.write(255);
+
       try {
         RandomAccessFile f = new RandomAccessFile("/sys/class/gpio/gpio18/value", "rw");
         f.writeByte((byte)'1');
