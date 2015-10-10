@@ -22,15 +22,8 @@ public class Solenoid {
     this.do_hit = do_hit;
     this.pin = pin;
     
-    
-    System.out.println("***** pin = " + pin);    
-    System.out.println("***** this.pin = " + this.pin);
-    
     this.bytes_pin = new ArrayList<Byte>();
-
     this.bytes_pin.add(new Byte((byte)(pin.charAt(0))));
-    
-    System.out.println("***** this.bytes_pin.size() = " + this.bytes_pin.size());
     
     if (pin.length() > 1)
       this.bytes_pin.add(new Byte((byte)(pin.charAt(1))));
@@ -69,9 +62,6 @@ public class Solenoid {
       try {
         RandomAccessFile f = new RandomAccessFile("/sys/class/gpio/unexport", "rw");
         
-        System.out.println("UUUUUU this.pin = " + this.pin);
-        System.out.println("UUUUUU this.bytes_pin.get(0) = " + this.bytes_pin.get(0));
-
         byte b0 = (Byte)this.bytes_pin.get(0);
         f.writeByte(b0);
         
