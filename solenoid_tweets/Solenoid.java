@@ -13,29 +13,20 @@ import processing.serial.*; // serial communication library
 
 
 public class Solenoid {
+  private String pin;
   private boolean do_hit = false;
-  private RandomAccessFile pin_file = null;
   private byte[] bytes_pin = null;
 
   public Solenoid(PApplet p_applet, String pin, boolean do_hit) {
     this.do_hit = do_hit;
+    this.pin = pin;
 
     if (do_hit) {
       // GPIO config
       unexport_pin();
       export_pin();
 
-      // Open file to control solenoid device using the GPIO pin
-      try {
-        this.pin_file = new RandomAccessFile("/sys/class/gpio/gpio" + pin + "/value", "rw");
-        this.activate(false);
-      }
-      catch (FileNotFoundException e) {
-        System.out.println("FileNotFoundException: " + e);
-      }
-      catch (IOException e) {
-        System.out.println("IOException: " + e);
-      }
+      this.activate(false);
     }
   }
 
@@ -80,12 +71,15 @@ public class Solenoid {
     }
   }
 
-  private void activate(boolean status) {
+  private void activate(boolean status) {    
+    // Open file and write '0' or '1' to control solenoid device using the GPIO pin
     try {
+      RandomAccessFile pin_file = new RandomAccessFile("/sys/class/gpio/gpio" + this.pin + "/value", "rw");
       if (status)
-        this.pin_file.writeByte((byte)'1');
+        pin_file.writeByte((byte)'1');
       else
-        this.pin_file.writeByte((byte)'0');
+        pin_file.writeByte((byte)'0');
+      pin_file.close();
     }
     catch (FileNotFoundException e) {
       System.out.println("FileNotFoundException: " + e);
@@ -109,12 +103,9 @@ public class Solenoid {
   
   // Free sources before finishing
   public void finalize() throws IOException {
-	// Close pin file
-	if (this.pin_file != null)
-        this.pin_file.close();
-
-	// Unexport pin so it can be used by others
+    // Unexport pin so it can be used by others
     if (do_hit)
 	  this.unexport_pin();
   }
 }
+
