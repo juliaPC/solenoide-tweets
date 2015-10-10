@@ -6,6 +6,7 @@
 // Julia Puyo - http://juliapuyo.com/
 
 import java.io.*; 
+import java.util.*;
 
 import processing.*;
 import processing.core.*;
@@ -15,11 +16,15 @@ import processing.serial.*; // serial communication library
 public class Solenoid {
   private String pin;
   private boolean do_hit = false;
-  private byte[] bytes_pin = null;
+  private List bytes_pin = new ArrayList<Byte>();
 
   public Solenoid(PApplet p_applet, String pin, boolean do_hit) {
     this.do_hit = do_hit;
     this.pin = pin;
+
+    this.bytes_pin.add(new Byte((byte)(pin.charAt(0))));
+    if (pin.length() > 1)
+      this.bytes_pin.add(new Byte((byte)(pin.charAt(1))));
 
     if (do_hit) {
       // GPIO config
@@ -33,9 +38,14 @@ public class Solenoid {
   private void export_pin() {
       try {
         RandomAccessFile f = new RandomAccessFile("/sys/class/gpio/export", "rw");
-        f.writeByte(this.bytes_pin[0]);
-        if (this.bytes_pin.length > 1)
-          f.writeByte(this.bytes_pin[1]);
+        
+        byte b0 = (Byte)this.bytes_pin.get(0);
+        f.writeByte(b0);
+
+        if (this.bytes_pin.size() > 1) {
+			byte b1 = (Byte)this.bytes_pin.get(1);
+            f.writeByte(b1);
+	    }
         f.close();
       }
       catch (FileNotFoundException e) {
@@ -49,9 +59,15 @@ public class Solenoid {
   private void unexport_pin() {
       try {
         RandomAccessFile f = new RandomAccessFile("/sys/class/gpio/unexport", "rw");
-        f.writeByte(this.bytes_pin[0]);
-        if (this.bytes_pin.length > 1)
-          f.writeByte(this.bytes_pin[1]);
+
+        byte b0 = (Byte)this.bytes_pin.get(0);
+        f.writeByte(b0);
+        
+        if (this.bytes_pin.size() > 1) {
+			byte b1 = (Byte)this.bytes_pin.get(1);
+            f.writeByte(b1);
+	    }
+
         f.close();
       }
       catch (FileNotFoundException e) {
