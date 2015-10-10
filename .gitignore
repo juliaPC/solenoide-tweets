@@ -5,4 +5,6 @@ code/
 output_dir/
 /solenoid_tweets_java/nbproject/private/
 .DS_Store
-
+._.DS_Store
+application.linux32/
+application.linux64/
