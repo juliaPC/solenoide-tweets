@@ -60,7 +60,7 @@ void setup() {
     size(480,320);
     do_background();
     fill(255);
-    textSize(14);
+    textSize(20);
 
     System.out.println(new java.io.File("").getAbsolutePath());
     
@@ -89,7 +89,7 @@ void setup() {
             do_background();
             
             text(username + " : " + text,
-                 width/5.5, height/4,
+                 width/5.5, height/4.1,
                  300, 160);
           
             // notify new tweet
