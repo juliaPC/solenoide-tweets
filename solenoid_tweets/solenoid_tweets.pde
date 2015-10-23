@@ -60,7 +60,7 @@ void setup() {
     size(480,320);
     do_background();
     fill(255);
-    textSize(14)
+    textSize(14);
 
     System.out.println(new java.io.File("").getAbsolutePath());
     
