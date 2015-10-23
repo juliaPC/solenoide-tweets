@@ -57,9 +57,10 @@ void do_background() {
 
 
 void setup() {
-    size(800,600);
+    size(480,320);
     do_background();
     fill(255);
+    textSize(14)
 
     System.out.println(new java.io.File("").getAbsolutePath());
     
@@ -88,8 +89,8 @@ void setup() {
             do_background();
             
             text(username + " : " + text,
-                 width/2, height/2,
-                 300, 200);
+                 width/4.5, height/3,
+                 280, 160);
           
             // notify new tweet
             solenoid.hit();
