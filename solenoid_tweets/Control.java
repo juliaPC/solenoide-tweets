@@ -33,14 +33,16 @@ public class Control implements Runnable {
                 // Check if within working time and start/stop the producer
                 if (!this.producer_running && this.within(current_cal)) {
                     // Turn screen on
-                    Process p = Runtime.getRuntime().exec("/home/pi/screen.sh 1");
+                    Process p = Runtime.getRuntime().exec("/bin/bash /home/pi/screen.sh 1");
+                    p.waitFor();
                     // Start producer
                     this.start_producer();
                 }
                 else {
                     if (this.producer_running && !this.within(current_cal)) {
                         // Turn screen off
-                        Process p = Runtime.getRuntime().exec("/home/pi/screen.sh 0");
+                        Process p = Runtime.getRuntime().exec("/bin/bash /home/pi/screen.sh 0");
+                        p.waitFor();
                         // Stop producer
                         this.stop_producer();
                     }
