@@ -22,49 +22,6 @@ public class Control implements Runnable {
 
     private String[] tags;
     
-
-    /*Vector shellExec ( String command )
-    {
-      return shellExec ( new String[]{ "/bin/bash", "-c", command } );
-    }
-
-    //Fonction ShellExec
-    Vector shellExec ( String[] command )
-    {
-      Vector lines = new Vector();
-      try {
-        Process process = Runtime.getRuntime().exec ( command );
-        
-        BufferedReader inBufferedReader  = new BufferedReader( new InputStreamReader ( process.getInputStream() ) );
-        BufferedReader errBufferedReader = new BufferedReader( new InputStreamReader ( process.getErrorStream() ) );
-        
-        String line, eline;
-        while ( (line  = inBufferedReader.readLine() ) != null && !errBufferedReader.ready() )
-        {
-      lines.add(line);
-        }
-        if ( errBufferedReader.ready() ) {
-      while ( (eline  = errBufferedReader.readLine() ) != null )
-      {
-        System.out.println( eline );
-      }
-      return null;
-        }
-        int exitVal = process.waitFor();
-        
-        inBufferedReader.close();  process.getInputStream().close();
-        errBufferedReader.close(); process.getErrorStream().close();
-      }
-      catch (Exception e)
-      {
-        e.printStackTrace();
-        return null;
-      }
-      
-      return lines;
-    }*/
-    
-
     public void run() {
         while (true) { 
             try {
@@ -79,8 +36,6 @@ public class Control implements Runnable {
                     String[] cmd = {"/home/pi/screen.sh", "1"};
                     Process p = Runtime.getRuntime().exec(cmd, new String[0], new File("/home/pi"));
                     p.waitFor();
-                    //shellExec("/home/pi/screen.sh 1");
-                    // Start producer
                     this.start_producer();
                 }
                 else {
@@ -89,8 +44,6 @@ public class Control implements Runnable {
                         String[] cmd = {"/home/pi/screen.sh", "0"};
                         Process p = Runtime.getRuntime().exec(cmd, new String[0], new File("/home/pi"));
                         p.waitFor();
-                        //shellExec("/home/pi/screen.sh 0");
-                        // Stop producer
                         this.stop_producer();
                     }
                 }
@@ -121,7 +74,9 @@ public class Control implements Runnable {
         int m = current_cal.get(Calendar.MINUTE);
         int current = h*60 + m;
 
-        return current >= start && current <= end;
+        int day_of_week = current_cal.get(Calendar.DAY_OF_WEEK);
+        return day_of_week != Calendar.SUNDAY &&
+                              (current >= start && current <= end);
     }
 
     public Control(TweetsProducer tweets_producer, String[] tags,
