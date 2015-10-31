@@ -23,7 +23,7 @@ public class Control implements Runnable {
     private String[] tags;
     
 
-    Vector shellExec ( String command )
+    /*Vector shellExec ( String command )
     {
       return shellExec ( new String[]{ "/bin/bash", "-c", command } );
     }
@@ -62,7 +62,7 @@ public class Control implements Runnable {
       }
       
       return lines;
-    }
+    }*/
     
 
     public void run() {
@@ -76,20 +76,20 @@ public class Control implements Runnable {
                 // Check if within working time and start/stop the producer
                 if (!this.producer_running && this.within(current_cal)) {
                     // Turn screen on
-                    //String[] cmd = {"/home/pi/screen.sh", "1"};
-                    //Process p = Runtime.getRuntime().exec(cmd, new String[0], new File("/home/pi"));
-                    //p.waitFor();
-                    shellExec("/home/pi/screen.sh 1");
+                    String[] cmd = {"/home/pi/screen.sh", "1"};
+                    Process p = Runtime.getRuntime().exec(cmd, new String[0], new File("/home/pi"));
+                    p.waitFor();
+                    //shellExec("/home/pi/screen.sh 1");
                     // Start producer
                     this.start_producer();
                 }
                 else {
                     if (this.producer_running && !this.within(current_cal)) {
                         // Turn screen off
-                        //String[] cmd = {"/home/pi/screen.sh", "0"};
-                        //Process p = Runtime.getRuntime().exec(cmd, new String[0], new File("/home/pi"));
-                        //p.waitFor();
-                        shellExec("/home/pi/screen.sh 0");
+                        String[] cmd = {"/home/pi/screen.sh", "0"};
+                        Process p = Runtime.getRuntime().exec(cmd, new String[0], new File("/home/pi"));
+                        p.waitFor();
+                        //shellExec("/home/pi/screen.sh 0");
                         // Stop producer
                         this.stop_producer();
                     }
@@ -100,9 +100,9 @@ public class Control implements Runnable {
             catch (InterruptedException e) {
                 System.out.println("Control InterruptedException: " + e);
             }
-            //catch (IOException e) {
-            //    System.out.println("Control IOException: " + e);
-            //}
+            catch (IOException e) {
+                System.out.println("Control IOException: " + e);
+            }
         }
     }
 
