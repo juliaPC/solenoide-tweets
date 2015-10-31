@@ -90,6 +90,15 @@ public class Solenoid implements Runnable {
             f.writeByte(b1);
 	    }
         f.close();
+        
+        // Write direction: out
+        byte[] bytes_out = {'o', 'u', 't'};
+        for (byte b : bytes_out) {
+		    System.out.println(b);
+	    }
+        
+        
+        
       }
       catch (FileNotFoundException e) {
         System.out.println("FileNotFoundException: " + e);
