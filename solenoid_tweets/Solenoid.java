@@ -79,7 +79,8 @@ public class Solenoid implements Runnable {
   }
 
   private void export_pin() {
-      try {
+	  // [ToDo] Make it work!
+      /*try {
         RandomAccessFile f = new RandomAccessFile("/sys/class/gpio/export", "rw");
         
         byte b0 = (Byte)this.bytes_pin.get(0);
@@ -104,11 +105,12 @@ public class Solenoid implements Runnable {
       }
       catch (IOException e) {
         System.out.println("IOException: " + e);
-      }
+      }*/
   }
 
   private void unexport_pin() {
-      try {
+	  // [ToDo] Make it work!
+      /*try {
         RandomAccessFile f = new RandomAccessFile("/sys/class/gpio/unexport", "rw");
         
         byte b0 = (Byte)this.bytes_pin.get(0);
@@ -126,7 +128,7 @@ public class Solenoid implements Runnable {
       }
       catch (IOException e) {
         System.out.println("IOException: " + e);
-      }
+      }*/
   }
 
   public void delay(int ms) {
