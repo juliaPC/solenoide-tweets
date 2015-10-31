@@ -10,7 +10,7 @@ import twitter4j.*;
 import twitter4j.conf.*;
 import processing.core.*;
 import java.util.*;
-
+import java.io.*;
 
 public class Control implements Runnable {
     private Thread th;
@@ -31,17 +31,28 @@ public class Control implements Runnable {
                 Calendar current_cal = Calendar.getInstance();
 
                 // Check if within working time and start/stop the producer
-                if (!this.producer_running && this.within(current_cal))
+                if (!this.producer_running && this.within(current_cal)) {
+                    // Turn screen on
+                    Process p = Runtime.getRuntime().exec("/home/pi/screen.sh 1");
+                    // Start producer
                     this.start_producer();
+                }
                 else {
-                    if (this.producer_running && !this.within(current_cal))
+                    if (this.producer_running && !this.within(current_cal)) {
+                        // Turn screen off
+                        Process p = Runtime.getRuntime().exec("/home/pi/screen.sh 0");
+                        // Stop producer
                         this.stop_producer();
+                    }
                 }
 
                 Thread.sleep(60 * 1000); // ms
             }
             catch (InterruptedException e) {
                 System.out.println("Control InterruptedException: " + e);
+            }
+            catch (IOException e) {
+                System.out.println("Control IOException: " + e);
             }
         }
     }
@@ -90,4 +101,5 @@ public class Control implements Runnable {
         this.producer_running = false;
     }
 }
+
 
