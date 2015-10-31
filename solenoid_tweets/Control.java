@@ -38,7 +38,7 @@ public class Control implements Runnable {
                         this.stop_producer();
                 }
 
-                Thread.sleep(2000); // ms
+                Thread.sleep(60 * 1000); // ms
             }
             catch (InterruptedException e) {
                 System.out.println("Control InterruptedException: " + e);
