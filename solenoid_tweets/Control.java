@@ -21,6 +21,49 @@ public class Control implements Runnable {
     private Calendar start_cal, end_cal;
 
     private String[] tags;
+    
+
+    Vector shellExec ( String command )
+    {
+      return shellExec ( new String[]{ "/bin/bash", "-c", command } );
+    }
+
+    //Fonction ShellExec
+    Vector shellExec ( String[] command )
+    {
+      Vector lines = new Vector();
+      try {
+        Process process = Runtime.getRuntime().exec ( command );
+        
+        BufferedReader inBufferedReader  = new BufferedReader( new InputStreamReader ( process.getInputStream() ) );
+        BufferedReader errBufferedReader = new BufferedReader( new InputStreamReader ( process.getErrorStream() ) );
+        
+        String line, eline;
+        while ( (line  = inBufferedReader.readLine() ) != null && !errBufferedReader.ready() )
+        {
+      lines.add(line);
+        }
+        if ( errBufferedReader.ready() ) {
+      while ( (eline  = errBufferedReader.readLine() ) != null )
+      {
+        System.out.println( eline );
+      }
+      return null;
+        }
+        int exitVal = process.waitFor();
+        
+        inBufferedReader.close();  process.getInputStream().close();
+        errBufferedReader.close(); process.getErrorStream().close();
+      }
+      catch (Exception e)
+      {
+        e.printStackTrace();
+        return null;
+      }
+      
+      return lines;
+    }
+    
 
     public void run() {
         while (true) { 
@@ -33,18 +76,20 @@ public class Control implements Runnable {
                 // Check if within working time and start/stop the producer
                 if (!this.producer_running && this.within(current_cal)) {
                     // Turn screen on
-                    String[] cmd = {"/home/pi/screen.sh", "1"};
-                    Process p = Runtime.getRuntime().exec(cmd, new String[0], new File("/home/pi"));
-                    p.waitFor();
+                    //String[] cmd = {"/home/pi/screen.sh", "1"};
+                    //Process p = Runtime.getRuntime().exec(cmd, new String[0], new File("/home/pi"));
+                    //p.waitFor();
+                    shellExec("/home/pi/screen.sh 1");
                     // Start producer
                     this.start_producer();
                 }
                 else {
                     if (this.producer_running && !this.within(current_cal)) {
                         // Turn screen off
-                        String[] cmd = {"/home/pi/screen.sh", "0"};
-                        Process p = Runtime.getRuntime().exec(cmd, new String[0], new File("/home/pi"));
-                        p.waitFor();
+                        //String[] cmd = {"/home/pi/screen.sh", "0"};
+                        //Process p = Runtime.getRuntime().exec(cmd, new String[0], new File("/home/pi"));
+                        //p.waitFor();
+                        shellExec("/home/pi/screen.sh 0");
                         // Stop producer
                         this.stop_producer();
                     }
@@ -55,9 +100,9 @@ public class Control implements Runnable {
             catch (InterruptedException e) {
                 System.out.println("Control InterruptedException: " + e);
             }
-            catch (IOException e) {
-                System.out.println("Control IOException: " + e);
-            }
+            //catch (IOException e) {
+            //    System.out.println("Control IOException: " + e);
+            //}
         }
     }
 
