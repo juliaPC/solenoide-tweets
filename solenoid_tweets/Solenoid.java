@@ -92,13 +92,12 @@ public class Solenoid implements Runnable {
         f.close();
         
         // Write direction: out
+        f = new RandomAccessFile("/sys/class/gpio/gpio" + this.pin + "/direction", "rw");
+        //        
         byte[] bytes_out = {'o', 'u', 't'};
-        for (byte b : bytes_out) {
-		    System.out.println(b);
-	    }
-        
-        
-        
+        for (byte b : bytes_out)
+		    f.writeByte(b);
+        f.close();
       }
       catch (FileNotFoundException e) {
         System.out.println("FileNotFoundException: " + e);
