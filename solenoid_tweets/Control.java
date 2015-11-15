@@ -61,13 +61,13 @@ public class Control implements Runnable {
 
     // Checks if the current time is within the configured working time
     private boolean within(Calendar cal) {
-        int h1 = this.start_cal.get(Calendar.HOUR_OF_DAY);
+        /*int h1 = this.start_cal.get(Calendar.HOUR_OF_DAY);
         int m1 = this.start_cal.get(Calendar.MINUTE);
         int start = h1*60 + m1;
 
         int h2 = this.end_cal.get(Calendar.HOUR_OF_DAY);
         int m2 = this.end_cal.get(Calendar.MINUTE);
-        int end = h2*60 + m2;
+        int end = h2*60 + m2;*/
 
         Calendar current_cal = Calendar.getInstance();
         int h = current_cal.get(Calendar.HOUR_OF_DAY);
@@ -75,8 +75,20 @@ public class Control implements Runnable {
         int current = h*60 + m;
 
         int day_of_week = current_cal.get(Calendar.DAY_OF_WEEK);
-        return day_of_week != Calendar.SUNDAY &&
-                              (current >= start && current <= end);
+
+        // It nevers works on Sunday
+        if (day_of_week == Calendar.SUNDAY)
+            return false;
+
+        // Saturdays, for 10:00h to 13:30h
+        if (day_of_week == Calendar.SATURDAY)
+            return (current >= 10*60+30 && current <= 13*60+30);
+
+        // Monday to Friday: from 11h to 13:30h and from 16:30h to 20:30h
+        return (current >= 11*60 && current <= 13*60+30) || (current >= 16*60+30 && current <= 20*60+30);
+
+        // Old: do not use configuration file
+        // return current >= start && current <= end;
     }
 
     public Control(TweetsProducer tweets_producer, String[] tags,
