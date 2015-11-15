@@ -80,7 +80,7 @@ public class Control implements Runnable {
         if (day_of_week == Calendar.SUNDAY)
             return false;
 
-        // Saturdays, for 10:00h to 13:30h
+        // Saturdays, from 10:30h to 13:30h
         if (day_of_week == Calendar.SATURDAY)
             return (current >= 10*60+30 && current <= 13*60+30);
 
