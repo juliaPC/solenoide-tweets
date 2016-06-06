@@ -89,8 +89,8 @@ void setup() {
             do_background();
             
             text(username + " : " + text,
-                 width/5.5, height/4.3,
-                 300, 200);
+                 width/12, height/10,
+                 400, 280);
           
             // notify new tweet
             solenoid.hit();

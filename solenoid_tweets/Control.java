@@ -59,16 +59,22 @@ public class Control implements Runnable {
         }
     }
 
-    // Checks if the current time is within the configured working time
+    // Checks if the current time is within the configured working time for Etopia exhibition
     private boolean within(Calendar cal) {
-        /*int h1 = this.start_cal.get(Calendar.HOUR_OF_DAY);
+        
+        /* trabaja non stop */
+        //return true;
+
+	
+	int h1 = this.start_cal.get(Calendar.HOUR_OF_DAY);
         int m1 = this.start_cal.get(Calendar.MINUTE);
         int start = h1*60 + m1;
 
         int h2 = this.end_cal.get(Calendar.HOUR_OF_DAY);
         int m2 = this.end_cal.get(Calendar.MINUTE);
-        int end = h2*60 + m2;*/
-
+        int end = h2*60 + m2;
+	
+        
         Calendar current_cal = Calendar.getInstance();
         int h = current_cal.get(Calendar.HOUR_OF_DAY);
         int m = current_cal.get(Calendar.MINUTE);
@@ -77,18 +83,27 @@ public class Control implements Runnable {
         int day_of_week = current_cal.get(Calendar.DAY_OF_WEEK);
 
         // It nevers works on Sunday
-        if (day_of_week == Calendar.SUNDAY)
+        /*
+	if (day_of_week == Calendar.SUNDAY)
             return false;
+	*/
 
         // Saturdays, from 10:30h to 13:30h
+	/*
         if (day_of_week == Calendar.SATURDAY)
             return (current >= 10*60+30 && current <= 13*60+30);
+	*/
 
         // Monday to Friday: from 11h to 13:30h and from 16:30h to 20:30h
-        return (current >= 11*60 && current <= 13*60+30) || (current >= 16*60+30 && current <= 20*60+30);
+	/*        
+	return (current >= 11*60 && current <= 13*60+30) || (current >= 16*60+30 && current <= 20*60+30);
+	*/
 
-        // Old: do not use configuration file
-        // return current >= start && current <= end;
+	// Monday to Sunday Etopia schedule: from 10h to 21h
+	//return (current >= 10*60 && current <= 21*60);
+        
+	// Old: do not use configuration file Control.java but config.properties start and end time
+        return current >= start && current <= end;
     }
 
     public Control(TweetsProducer tweets_producer, String[] tags,
